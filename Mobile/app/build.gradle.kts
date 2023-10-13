@@ -1,8 +1,7 @@
-import org.jetbrains.kotlin.ir.backend.js.compile
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -68,23 +67,30 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
     val nav_version = "2.7.4"
     implementation("androidx.navigation:navigation-compose:$nav_version")
+
     val koin_version = "3.5.0"
     implementation("io.insert-koin:koin-core:$koin_version")
     implementation("io.insert-koin:koin-androidx-compose:$koin_version")
     implementation("io.insert-koin:koin-androidx-compose-navigation:$koin_version")
+    implementation("io.insert-koin:koin-android:$koin_version")
+
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
-    val ktorVersion = "2.3.3"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.5.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
-    api("io.ktor:ktor-client-core:$ktorVersion")
 
+    val ktorVersion = "2.3.3"
+
+    api("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
     implementation("io.ktor:ktor-client-logging:$ktorVersion")
     implementation("io.ktor:ktor-client-mock:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.github.aakira:napier:2.4.0")
     api("io.ktor:ktor-client-cio:$ktorVersion")
+
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 }

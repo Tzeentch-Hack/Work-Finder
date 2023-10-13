@@ -1,40 +1,37 @@
-package com.tzeentch.workfinder.composables
+package com.tzeentch.workfinder.ui.composables
 
-import android.graphics.pdf.PdfDocument.Page
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.tzeentch.workfinder.NavigationItem
-import com.tzeentch.workfinder.composables.component.CardFields
-import com.tzeentch.workfinder.composables.component.CustomOutlinedTextField
-import com.tzeentch.workfinder.composables.component.PagerController
+import com.tzeentch.workfinder.ui.composables.components.CardFields
+import com.tzeentch.workfinder.ui.composables.components.PagerController
+import com.tzeentch.workfinder.viewModels.MainViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Registration(navController: NavController) {
-    val page = rememberPagerState(
+fun Registration(navController: NavController, viewModel: MainViewModel) {
+    val scope = rememberCoroutineScope()
+    val pagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0f
     ) {
         5
     }
-
+    val onScrollClick: (Int) -> Unit = remember {
+        { index ->
+            scope.launch {
+                pagerState.animateScrollToPage(index)
+            }
+        }
+    }
     val age = remember {
         mutableStateOf("")
     }
@@ -43,9 +40,10 @@ fun Registration(navController: NavController) {
         mutableStateOf("")
     }
 
-    HorizontalPager(state = page, userScrollEnabled = false, pageSpacing = 25.dp) {
+    HorizontalPager(state = pagerState, userScrollEnabled = false, pageSpacing = 25.dp) {
         Card {
-            when (page.currentPage) {
+            val res = pagerState.currentPage
+            when (res) {
                 0 -> {
                     CardFields(
                         inputHolder = age,
@@ -55,7 +53,6 @@ fun Registration(navController: NavController) {
                         buttonText2 = "women",
                         buttonHolder = sex
                     )
-                    PagerController(pager = page)
                 }
 
                 1 -> {
@@ -67,7 +64,6 @@ fun Registration(navController: NavController) {
                         buttonText2 = "women",
                         buttonHolder = sex
                     )
-                    PagerController(pager = page)
                 }
 
                 2 -> {
@@ -79,7 +75,6 @@ fun Registration(navController: NavController) {
                         buttonText2 = "women",
                         buttonHolder = sex
                     )
-                    PagerController(pager = page)
                 }
 
                 3 -> {
@@ -91,7 +86,6 @@ fun Registration(navController: NavController) {
                         buttonText2 = "women",
                         buttonHolder = sex
                     )
-                    PagerController(pager = page)
                 }
 
                 4 -> {
@@ -103,9 +97,15 @@ fun Registration(navController: NavController) {
                         buttonText2 = "women",
                         buttonHolder = sex
                     )
-                    PagerController(pager = page)
                 }
             }
+            PagerController(currPage = res, onNextClick = {
+                onScrollClick(res + 1)
+            }, onPrevClick = {
+                onScrollClick(res - 1)
+            }, onFinishClick = {
+                
+            })
         }
     }
 

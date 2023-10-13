@@ -1,6 +1,5 @@
-package com.tzeentch.workfinder.composables
+package com.tzeentch.workfinder.ui.composables
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,10 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.tzeentch.workfinder.NavigationItem
-import com.tzeentch.workfinder.composables.component.CustomOutlinedTextField
+import com.tzeentch.workfinder.ui.composables.components.CustomOutlinedTextField
+import com.tzeentch.workfinder.viewModels.MainViewModel
 
 @Composable
-fun Authorization(navController: NavController) {
+fun Authorization(navController: NavController,viewModel: MainViewModel) {
     var name by remember {
         mutableStateOf("")
     }
