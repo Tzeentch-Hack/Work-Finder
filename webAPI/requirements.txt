@@ -51,3 +51,6 @@ websockets==11.0.3
 requests
 html5lib
 beautifulsoup4
+python-docx
+openai
+google-cloud-translate

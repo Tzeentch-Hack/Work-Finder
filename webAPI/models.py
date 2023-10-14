@@ -26,5 +26,9 @@ class CourseraCourse(BaseModel):
     content: str | None = None
 
 
+class UrlData(BaseModel):
+    url: str
+
+
 class UserInDB(User):
     hashed_password: str

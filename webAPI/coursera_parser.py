@@ -16,19 +16,25 @@ def get_parsed_courses(search_params) -> list[models.CourseraCourse]:
     if response.status_code == 200:
         course_items = soup.find_all("div", class_='cds-ProductCard-gridCard')
         for course_item in course_items:
-            parsed_course = models.CourseraCourse
-            parsed_course.preview_image_url = course_item.find("img")["src"]
-            parsed_course.title = course_item.find("div", class_="cds-ProductCard-header").find("h3"). \
+            preview_image_url = course_item.find("img")["src"]
+            title = course_item.find("div", class_="cds-ProductCard-header").find("h3"). \
                 text.encode('latin-1').decode('utf-8')
-            parsed_course.sub_title = course_item.find("div", class_="css-oejgx0 cds-ProductCard-partners").find(
+            sub_title = course_item.find("div", class_="css-oejgx0 cds-ProductCard-partners").find(
                 "p").text
-            parsed_course.href = course_item.find("div", class_="cds-ProductCard-header").find("a")["href"]
-            parsed_course.href = "https://www.coursera.org" + parsed_course.href
+            href = course_item.find("div", class_="cds-ProductCard-header").find("a")["href"]
+            href = "https://www.coursera.org" + href
             body_content = course_item.find("div", class_="cds-CommonCard-bodyContent")
             content_text = ""
             if body_content is not None:
                 content_text = body_content.find("p").text
-            parsed_course.content = content_text
+            content = content_text
+            parsed_course = models.CourseraCourse(
+                title=title,
+                preview_image_url=preview_image_url,
+                sub_title=sub_title,
+                href=href,
+                content=content
+            )
             parsed_courses.append(parsed_course)
     else:
         print("Error: Unable to fetch search results")

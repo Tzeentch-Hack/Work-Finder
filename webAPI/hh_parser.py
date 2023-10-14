@@ -11,29 +11,32 @@ class HHAPI:
         self.area_id = area_id
 
     def _make_request(self, endpoint, params=None):
-        """Make a request to HH API and return JSON data."""
         response = requests.get(f"{self.BASE_URL}{endpoint}", headers=self.HEADERS, params=params)
         response.raise_for_status()
         return response.json()
 
     def fetch_specializations(self):
-        """Fetch all specializations."""
         data = self._make_request("/specializations")
         return {spec['id']: spec['name'] for prof_field in data for spec in prof_field['specializations']}
 
     def fetch_vacancies(self):
-        """Fetch all vacancies and return professional roles."""
         params = {
             'area': self.area_id,
             'per_page': 100,
             'page': 0
         }
         fields_count = {}
-
+        clean_vacancies = []
         while True:
             vacancies = self._make_request("/vacancies", params=params)
-
+            print('got a request')
             for vacancy in vacancies['items']:
+                clean_vacancy = {}
+                clean_vacancy['name'] = vacancy['name']
+                clean_vacancy['url'] = vacancy['alternate_url']
+                clean_vacancy['specialization'] = vacancy['professional_roles'][0]['name']
+                clean_vacancy['employment'] = vacancy['employment']['name'] # полная ли занятость
+                clean_vacancies.append(clean_vacancy)
                 for spec in vacancy['professional_roles']:
                     spec_name = spec['name']
                     fields_count[spec_name] = fields_count.get(spec_name, 0) + 1
@@ -43,7 +46,7 @@ class HHAPI:
 
             params['page'] += 1
 
-        return fields_count
+        return fields_count, clean_vacancies
 
     @staticmethod
     def display_sorted_fields(fields_count):
@@ -53,13 +56,12 @@ class HHAPI:
             print(f"{field}: {count}")
 
 
-def main():
-    area_id = 97
-    api = HHAPI(area_id)
-    api.fetch_specializations()
-    fields_count = api.fetch_vacancies()
-    api.display_sorted_fields(fields_count)
-
-
 if __name__ == "__main__":
-    main()
+    api = HHAPI(area_id=97)
+    import time
+    start = time.time()
+    fields_count, cleaned_vacancies = api.fetch_vacancies()
+    #api.display_sorted_fields(fields_count)
+    print('cleaned_vacancies', cleaned_vacancies)
+    end = time.time()
+    print('time taken:', end - start)

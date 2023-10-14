@@ -4,16 +4,20 @@ from docx.shared import Inches
 from resume_generator import ResumeBuilder
 
 import subprocess
+import os
+import time
+
+resume_path = "./CVs"
 
 def compile_to_pdf(input_path):
     subprocess.call(['libreoffice', '--headless', '--convert-to', 'pdf', input_path])
 
 
-def build_pdf_resume(resume_info, image_path):
-    build_docx_resume(resume_info, image_path)
-    compile_to_pdf('temp_resume.docx')
+def build_pdf_resume(resume_info, image_path, username):
+    path = build_docx_resume(resume_info, image_path)
+    compile_to_pdf(path)
 
-def build_docx_resume(resume_info, image_path):
+def build_docx_resume(resume_info, image_path, username):
     doc = Document()
     doc.add_picture(image_path, width=Inches(1.5))
     p = doc.add_paragraph()
@@ -29,7 +33,24 @@ def build_docx_resume(resume_info, image_path):
     doc.add_heading('Additional Information', level=1)
     doc.add_paragraph(resume_info['additional_information'])
 
-    doc.save('temp_resume.docx')
+    #doc.save('temp_resume.docx')
+    return save_to_user_folder(doc, username)
+
+
+def save_to_user_folder(doc, username):
+    if not os.path.exists(resume_path):
+        os.makedirs(resume_path)
+    user_path = os.path.join(resume_path, username)
+    if not os.path.exists(user_path):
+        os.makedirs(user_path)
+    try:
+        current_time_seconds = int(time.time())
+        time_string = str(current_time_seconds)
+        path = os.path.join(user_path, f'{username}_cv_{time_string}.docx')
+        doc.save(path)
+        return path
+    except Exception("IO error") as e:
+        raise e
 
 
 if __name__ == "__main__":
