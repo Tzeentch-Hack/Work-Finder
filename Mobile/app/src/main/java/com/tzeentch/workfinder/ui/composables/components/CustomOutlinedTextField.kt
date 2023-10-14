@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,8 +31,8 @@ fun CustomOutlinedTextField(
         if (defTitle.isNotEmpty()) {
             Text(
                 text = defTitle,
-                color = Color.DarkGray,
-                modifier = Modifier.padding(top = 5.dp)
+                color = Color(0xFFD4D4D5),
+                modifier = Modifier.padding(top = 5.dp, start = 18.dp)
             )
         }
 
@@ -45,9 +46,10 @@ fun CustomOutlinedTextField(
                 onValueChange(it)
             },
             isError = isError,
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(22.dp),
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            colors = TextFieldDefaults.outlinedTextFieldColors(unfocusedBorderColor = Color(0x4DFDFDFD) )
         )
     }
 }

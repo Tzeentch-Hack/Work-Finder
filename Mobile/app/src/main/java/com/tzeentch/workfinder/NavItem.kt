@@ -8,6 +8,6 @@ sealed class NavigationItem(
     object FillQuest : NavigationItem("fil")
     object MainScreen : NavigationItem("main")
     object Settings : NavigationItem("settings")
-    object Air : NavigationItem("air")
+    object Profile : NavigationItem("profile")
 
 }

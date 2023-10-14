@@ -3,16 +3,22 @@ package com.tzeentch.workfinder.repositories
 import com.tzeentch.workfinder.Constants
 import com.tzeentch.workfinder.dto.AuthResultDto
 import com.tzeentch.workfinder.dto.CoursesDto
+import com.tzeentch.workfinder.dto.PhotoResponse
 import com.tzeentch.workfinder.dto.UserDto
 import com.tzeentch.workfinder.remote.NetworkResultState
 import com.tzeentch.workfinder.remote.safeApiCall
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.forms.FormDataContent
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
 import io.ktor.client.request.header
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import io.ktor.http.Parameters
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -50,8 +56,31 @@ class MainRepository constructor(
     ): Flow<NetworkResultState<List<CoursesDto>>> {
         return flowOf(
             safeApiCall {
-                httpClient.get(urlString = " ${Constants.GET_COURSES}?search_params=$searchQuery") {
+                httpClient.get(urlString = Constants.GET_COURSES) {
+                    parameter("search_params", searchQuery)
                     header("Authorization", "Bearer $token")
+                }.body()
+            }
+        )
+    }
+
+    suspend fun uploadPhoto(
+        token: String,
+        file: ByteArray
+    ): Flow<NetworkResultState<PhotoResponse>> {
+        return flowOf(
+            safeApiCall {
+                httpClient.post(urlString = Constants.GENERATE_CV) {
+                    parameter("pdf", false)
+                    header("Authorization", "Bearer $token")
+                    setBody(MultiPartFormDataContent(
+                        formData {
+                            append("file", file, Headers.build {
+                                append(HttpHeaders.ContentType, "image/jpeg")
+                                append(HttpHeaders.ContentDisposition, "filename=image.jpg")
+                            })
+                        }
+                    ))
                 }.body()
             }
         )

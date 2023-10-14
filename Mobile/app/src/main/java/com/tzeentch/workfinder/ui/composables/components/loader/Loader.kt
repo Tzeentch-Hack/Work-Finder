@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -45,7 +44,7 @@ fun DotsCollision() {
             .size(50.dp)
             .offset(x = offset.dp)
             .background(
-                color = Color.Blue,
+                color = Color(0xFF283C5D),
                 shape = CircleShape
             )
     )

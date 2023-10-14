@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.tzeentch.workfinder.NavigationItem
 import com.tzeentch.workfinder.ui.composables.Authorization
 import com.tzeentch.workfinder.ui.composables.MainScreen
+import com.tzeentch.workfinder.ui.composables.ProfileScreen
 import com.tzeentch.workfinder.ui.composables.Registration
 import com.tzeentch.workfinder.ui.theme.WorkfinderTheme
 import com.tzeentch.workfinder.viewModels.MainViewModel
@@ -44,6 +44,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = NavigationItem.MainScreen.route) {
                             MainScreen(navController = navController, viewModel)
+                        }
+                        composable(route = NavigationItem.Profile.route) {
+                            ProfileScreen(navController = navController, viewModel = viewModel)
                         }
                     }
                 }

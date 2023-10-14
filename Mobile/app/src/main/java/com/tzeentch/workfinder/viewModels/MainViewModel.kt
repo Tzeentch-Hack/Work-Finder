@@ -3,6 +3,7 @@ package com.tzeentch.workfinder.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tzeentch.workfinder.dto.UserDto
 import com.tzeentch.workfinder.local.PreferenceManager
 import com.tzeentch.workfinder.remote.isLoading
 import com.tzeentch.workfinder.remote.onFailure
@@ -10,6 +11,7 @@ import com.tzeentch.workfinder.remote.onSuccess
 import com.tzeentch.workfinder.repositories.MainRepository
 import com.tzeentch.workfinder.ui.GreetingStates
 import com.tzeentch.workfinder.ui.MainScreenStates
+import com.tzeentch.workfinder.ui.ProfileScreenStates
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,13 +25,19 @@ class MainViewModel constructor(
 
     private var token: String = ""
 
+    lateinit var user: UserDto
+
     private val coroutineExceptionHandler =
-        Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
+        Dispatchers.IO + CoroutineExceptionHandler { _, thr ->
+            Log.d("smt", thr.message.toString())
             _greetingState.value = GreetingStates.Form("Unexpected Error")
         }
 
     private val _greetingState = MutableStateFlow<GreetingStates>(GreetingStates.Loading)
     val greetingState = _greetingState.asStateFlow()
+
+    private val _profileState = MutableStateFlow<ProfileScreenStates>(ProfileScreenStates.Initial)
+    val profileState = _profileState.asStateFlow()
 
     private val _mainState = MutableStateFlow<MainScreenStates>(MainScreenStates.Initial)
     val mainState = _mainState.asStateFlow()
@@ -41,6 +49,21 @@ class MainViewModel constructor(
                 _greetingState.value = GreetingStates.Initial
             } else {
                 loginUser(name, password)
+            }
+        }
+    }
+
+    fun getUserData() {
+        viewModelScope.launch(coroutineExceptionHandler) {
+            repository.getUser(token).collect { result ->
+                result.isLoading {
+                    _profileState.value = ProfileScreenStates.Loading
+                }.onSuccess {
+                    user = it
+                    _profileState.value = ProfileScreenStates.UserProfile(it)
+                }.onFailure {
+
+                }
             }
         }
     }
@@ -106,17 +129,29 @@ class MainViewModel constructor(
         _greetingState.value = states
     }
 
-    fun getCoursesAndVacancies() {
-        Log.e("sssss","sss")
-        if (_mainState.value !is MainScreenStates.Initial) return
+    fun getCoursesAndVacancies(query: String) {
         viewModelScope.launch(coroutineExceptionHandler) {
-            repository.getCourses(token, "cleaning").collect { result ->
+            repository.getCourses(token, query).collect { result ->
                 result.isLoading {
                     _mainState.value = MainScreenStates.Loading
                 }.onSuccess {
                     _mainState.value = MainScreenStates.Content(emptyList(), it)
                 }.onFailure {
 
+                }
+            }
+        }
+    }
+
+    fun uploadPhoto(photo: ByteArray) {
+        viewModelScope.launch(coroutineExceptionHandler) {
+            repository.uploadPhoto(token, photo).collect { result ->
+                result.isLoading {
+                    _profileState.value = ProfileScreenStates.Loading
+                }.onSuccess {
+                    _profileState.value = ProfileScreenStates.UserProfile(user, it.url)
+                }.onFailure {
+                    Log.d("smt", it)
                 }
             }
         }

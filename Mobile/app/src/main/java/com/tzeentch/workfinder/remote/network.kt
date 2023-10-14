@@ -1,7 +1,5 @@
 package com.tzeentch.workfinder.remote
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatDelegate
 import com.tzeentch.workfinder.Constants
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
@@ -17,23 +15,20 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.statement.bodyAsText
-import io.ktor.client.utils.EmptyContent.contentType
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.dsl.module
-import java.io.File
 
 fun networkModule(): Module = module {
     single {
         HttpClient(engineFactory = CIO) {
             expectSuccess = true
             install(HttpTimeout) {
-                requestTimeoutMillis = 30000
+                requestTimeoutMillis = 500000
             }
             defaultRequest {
                 url(Constants.BASE_URL)

@@ -1,14 +1,15 @@
 package com.tzeentch.workfinder.ui.composables.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -29,7 +30,7 @@ fun CardFields(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(15.dp),
+            .padding(vertical = 16.dp, horizontal = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CustomOutlinedTextField(
@@ -42,26 +43,48 @@ fun CardFields(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        Text(text = buttonTitle, modifier = Modifier.fillMaxWidth())
+        Text(
+            text = buttonTitle,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp),
+            color = Color(0xFFD4D4D5)
+        )
         Row(modifier = Modifier.fillMaxWidth()) {
-            Button(
+            OutlinedButton(
                 onClick = { buttonHolder.value = buttonText1 },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (buttonText1 == buttonHolder.value) MaterialTheme.colorScheme.onTertiaryContainer else MaterialTheme.colorScheme.onSecondaryContainer,
-                    contentColor = Color.White
+                shape = RoundedCornerShape(
+                    topStart = 22.dp,
+                    topEnd = 0.dp,
+                    bottomEnd = 0.dp,
+                    bottomStart = 22.dp
+                ),
+                border = BorderStroke(color = Color(0x4DFDFDFD), width = 1.dp),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = if (buttonText1 == buttonHolder.value) Color(0xff284779) else Color.Transparent,
+                    contentColor = Color(0xFFD4D4D5)
                 ), modifier = Modifier
                     .weight(1F)
-                    .height(45.dp)
+                    .height(55.dp)
             ) {
                 Text(text = buttonText1)
             }
-            Button(
+            OutlinedButton(
                 onClick = { buttonHolder.value = buttonText2 },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (buttonText2 == buttonHolder.value) MaterialTheme.colorScheme.onTertiaryContainer else MaterialTheme.colorScheme.onSecondaryContainer,
-                    contentColor = Color.White
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = if (buttonText2 == buttonHolder.value) Color(0xff284779) else Color.Transparent,
+                    contentColor = Color(0xFFD4D4D5),
                 ),
-                modifier = Modifier.weight(1F).height(45.dp)
+                border = BorderStroke(color = Color(0x4DFDFDFD), width = 1.dp),
+                shape = RoundedCornerShape(
+                    topStart = 0.dp,
+                    topEnd = 22.dp,
+                    bottomEnd = 22.dp,
+                    bottomStart = 0.dp
+                ),
+                modifier = Modifier
+                    .weight(1F)
+                    .height(55.dp)
             ) {
                 Text(text = buttonText2)
             }

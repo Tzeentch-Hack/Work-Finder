@@ -7,4 +7,5 @@ object Constants {
     const val GET_USER = "/users/me"
     const val GET_VACANCIES = "/"
     const val GET_COURSES = "/courses"
+    const val GENERATE_CV = "/generate_cv"
 }

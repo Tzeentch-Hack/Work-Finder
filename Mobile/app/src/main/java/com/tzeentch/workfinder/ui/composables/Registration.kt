@@ -1,13 +1,19 @@
 package com.tzeentch.workfinder.ui.composables
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Button
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -68,7 +74,10 @@ fun Registration(navController: NavController, viewModel: MainViewModel) {
     }
 
     HorizontalPager(state = pagerState, userScrollEnabled = false, pageSpacing = 25.dp) {
-        Card {
+        Card(
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF47669B)),
+            modifier = Modifier.padding(35.dp)
+        ) {
             val res = pagerState.currentPage
             when (res) {
                 0 -> {
@@ -105,37 +114,72 @@ fun Registration(navController: NavController, viewModel: MainViewModel) {
                 }
 
                 3 -> {
-                    Text(text = "Режим работы")
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Button(
-                            onClick = { opMode.value = "Удаленная" },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = if ("Удаленная" == opMode.value) Color.Blue else Color.Gray,
-                                contentColor = Color.White
-                            ),
-                            modifier = Modifier.weight(1F)
-                        ) {
-                            Text(text = "Удаленная")
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp, horizontal = 8.dp)
+                    ) {
+                        Text(text = "Режим работы")
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            OutlinedButton(
+                                onClick = { opMode.value = "Удаленная" },
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    containerColor = if ("Удаленная" == opMode.value) Color(
+                                        0xff284779
+                                    ) else Color.Transparent,
+                                    contentColor = Color.White
+                                ),
+                                border = BorderStroke(color = Color(0x4DFDFDFD), width = 1.dp),
+                                shape = RoundedCornerShape(
+                                    topStart = 22.dp,
+                                    topEnd = 0.dp,
+                                    bottomStart = 0.dp,
+                                    bottomEnd = 0.dp
+                                ),
+                                modifier = Modifier
+                                    .weight(1F)
+                                    .height(55.dp)
+                            ) {
+                                Text(text = "Удаленная")
+                            }
+                            OutlinedButton(
+                                onClick = { opMode.value = "В офисе" },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if ("В офисе" == opMode.value) Color(0xff284779) else Color.Transparent,
+                                    contentColor = Color.White
+                                ),
+                                border = BorderStroke(color = Color(0x4DFDFDFD), width = 1.dp),
+                                shape = RoundedCornerShape(
+                                    topStart = 0.dp,
+                                    topEnd = 22.dp,
+                                    bottomStart = 0.dp,
+                                    bottomEnd = 0.dp
+                                ),
+                                modifier = Modifier
+                                    .weight(1F)
+                                    .height(55.dp)
+                            ) {
+                                Text(text = "В офисе")
+                            }
                         }
-                        Button(
+                        OutlinedButton(
                             onClick = { opMode.value = "Гибридная" },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if ("Гибридная" == opMode.value) Color.Blue else Color.Gray,
+                                containerColor = if ("Гибридная" == opMode.value) Color(0xff284779) else Color.Transparent,
                                 contentColor = Color.White
                             ),
-                            modifier = Modifier.weight(1F)
+                            border = BorderStroke(color = Color(0x4DFDFDFD), width = 1.dp),
+                            shape = RoundedCornerShape(
+                                topStart = 0.dp,
+                                topEnd = 0.dp,
+                                bottomStart =22.dp,
+                                bottomEnd = 22.dp
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(55.dp)
                         ) {
                             Text(text = "Гибридная")
-                        }
-                        Button(
-                            onClick = { opMode.value = "В офисе" },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = if ("В офисе" == opMode.value) Color.Blue else Color.Gray,
-                                contentColor = Color.White
-                            ),
-                            modifier = Modifier.weight(1F)
-                        ) {
-                            Text(text = "В офисе")
                         }
                     }
                 }

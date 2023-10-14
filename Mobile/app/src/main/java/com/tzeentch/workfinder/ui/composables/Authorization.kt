@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.tzeentch.workfinder.NavigationItem
 import com.tzeentch.workfinder.ui.GreetingStates
@@ -62,10 +64,10 @@ fun Authorization(navController: NavController, viewModel: MainViewModel) {
             Column(
                 modifier = Modifier.padding(top = 45.dp, start = 15.dp, end = 15.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(40.dp)
+                verticalArrangement = Arrangement.spacedBy(30.dp)
             ) {
 
-                Text(text = "Введите свои регистрационные данные")
+                Text(text = "Регистрация", fontSize = 23.sp, color = Color(0xFF284779))
 
                 CustomOutlinedTextField(defText = name,
                     defTitle = "Имя",
@@ -92,17 +94,28 @@ fun Authorization(navController: NavController, viewModel: MainViewModel) {
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    Button(onClick = {
-                        viewModel.loginUser(name, password)
-                    }, enabled = name.isNotEmpty() && password.isNotEmpty() && error.isEmpty()) {
+                    Button(
+                        onClick = {
+                            viewModel.loginUser(name, password)
+                        },
+                        enabled = name.isNotEmpty() && password.isNotEmpty() && error.isEmpty(),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(55.dp)
+                    ) {
                         Text(text = "Войти")
                     }
 
-                    Button(onClick = {
-                        viewModel.registerUser(name, password)
-                    }, enabled = name.isNotEmpty() && password.isNotEmpty() && error.isEmpty()) {
+                    Button(
+                        onClick = {
+                            viewModel.registerUser(name, password)
+                        }, enabled = name.isNotEmpty() && password.isNotEmpty() && error.isEmpty(),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(55.dp)
+                    ) {
                         Text(text = "Создать")
                     }
                 }
