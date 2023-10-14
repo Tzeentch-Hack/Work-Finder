@@ -18,7 +18,7 @@ def root():
     return {"message": "Work Finder"}
 
 
-@app.get("/coursera_courses", response_model=list[models.CourseraCourse], tags=["Courses"])
+@app.get("/courses", response_model=list[models.CourseraCourse], tags=["Courses"])
 def get_coursera_courses(current_user: Annotated[models.User, Depends(authorization.get_current_active_user)],
                          search_params):
     try:
