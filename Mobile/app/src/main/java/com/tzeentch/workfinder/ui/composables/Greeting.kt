@@ -12,13 +12,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.tzeentch.workfinder.NavigationItem
+import com.tzeentch.workfinder.ui.GreetingStates
 import com.tzeentch.workfinder.ui.composables.components.TypewriterText
 import com.tzeentch.workfinder.viewModels.MainViewModel
 
 @Composable
-fun Greeting(navController: NavController, viewModel: MainViewModel) {
+fun Greeting(viewModel: MainViewModel) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -29,15 +31,15 @@ fun Greeting(navController: NavController, viewModel: MainViewModel) {
         Spacer(modifier = Modifier.height(45.dp))
 
         Text(
-            text = "I am your intellectual assistant.\n" + "I will help you find a job.",
+            text = "Я твой интелектуальный ассистент.\n" + "Помогу тебе с поиском работы.",
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(45.dp))
 
-        Button(onClick = { navController.navigate(NavigationItem.Authorization.route) }) {
-            Text(text = "Continue")
+        Button(onClick = { viewModel.setState(GreetingStates.Form("")) }) {
+            Text(text = "Начать")
         }
     }
 }

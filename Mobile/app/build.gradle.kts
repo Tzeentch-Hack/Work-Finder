@@ -93,4 +93,10 @@ dependencies {
     api("io.ktor:ktor-client-cio:$ktorVersion")
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    val paging_version = "3.2.1"
+    implementation("androidx.paging:paging-runtime-ktx:$paging_version")
+    implementation("androidx.paging:paging-compose:3.3.0-alpha02")
+
+    implementation("io.coil-kt:coil-compose:2.4.0")
 }

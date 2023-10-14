@@ -2,7 +2,7 @@ package com.tzeentch.workfinder.remote
 
 sealed class NetworkResultState<out T> {
     data class Success<out T : Any?>(val data: T) : NetworkResultState<T>()
-    data class Failure(val exception: Exception) : NetworkResultState<Nothing>()
+    data class Failure(val exception: String) : NetworkResultState<Nothing>()
 
     object Loading : NetworkResultState<Nothing>()
 }
@@ -17,7 +17,7 @@ inline fun <T : Any?> NetworkResultState<T>.onSuccess(crossinline action: (T) ->
     return this
 }
 
-inline fun <T : Any?> NetworkResultState<T>.onFailure(crossinline action: (exception: Exception) -> Unit): NetworkResultState<T> {
+inline fun <T : Any?> NetworkResultState<T>.onFailure(crossinline action: (exception: String) -> Unit): NetworkResultState<T> {
     if (this is NetworkResultState.Failure) action(this.exception)
     return this
 }

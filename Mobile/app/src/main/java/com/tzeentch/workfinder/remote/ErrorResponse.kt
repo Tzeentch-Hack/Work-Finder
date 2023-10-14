@@ -1,7 +1,5 @@
 package com.tzeentch.workfinder.remote
 
-data class  ErrorResponse(
-    val success: Boolean,
-    val statusCode: Int,
+data class ErrorResponse(
     val statusMessage: String
 ) : Exception()

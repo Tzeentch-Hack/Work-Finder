@@ -1,5 +1,6 @@
 package com.tzeentch.workfinder.ui.composables.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,28 +20,34 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CustomOutlinedTextField(
     defText: String,
-    defError: String,
+    isError: Boolean = false,
+    defTitle: String,
     hint: String,
     onValueChange: (String) -> Unit,
     keyboardType: KeyboardType = KeyboardType.Text
 ) {
-    OutlinedTextField(
-        modifier = Modifier.fillMaxWidth().semantics { this.contentDescription = "InputTextField" },
-        value = defText,
-        placeholder = { Text(text = hint)},
-        onValueChange = {
-            onValueChange(it)
-        },
-        isError = defError.isNotEmpty(),
-        shape = RoundedCornerShape(6.dp),
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
-    )
-    if (defError.isNotEmpty()) {
-        Text(
-            text = defError,
-            color = Color.Red,
-            modifier = Modifier.padding(top = 5.dp)
+    Column(modifier = Modifier.fillMaxWidth()) {
+        if (defTitle.isNotEmpty()) {
+            Text(
+                text = defTitle,
+                color = Color.DarkGray,
+                modifier = Modifier.padding(top = 5.dp)
+            )
+        }
+
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { this.contentDescription = "InputTextField" },
+            value = defText,
+            placeholder = { Text(text = hint) },
+            onValueChange = {
+                onValueChange(it)
+            },
+            isError = isError,
+            shape = RoundedCornerShape(8.dp),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
         )
     }
 }

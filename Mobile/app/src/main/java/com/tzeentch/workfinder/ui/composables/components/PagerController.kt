@@ -29,14 +29,14 @@ fun PagerController(
                 onPrevClick()
             }
             ) {
-                Text(text = "<- Previous")
+                Text(text = "<- Назад")
             }
         }
-        if (currPage != 4) {
+        if (currPage != 3) {
             Button(onClick = {
                 onNextClick()
             }) {
-                Text(text = "Next ->")
+                Text(text = "Вперед ->")
             }
         } else {
             Button(onClick = {

@@ -5,8 +5,8 @@ sealed class NavigationItem(
 ) {
     object Greeting : NavigationItem("greeting")
     object Authorization : NavigationItem("auth")
-    object Registration : NavigationItem("reg")
-    object Questionary:NavigationItem("ques")
+    object FillQuest : NavigationItem("fil")
+    object MainScreen : NavigationItem("main")
     object Settings : NavigationItem("settings")
     object Air : NavigationItem("air")
 

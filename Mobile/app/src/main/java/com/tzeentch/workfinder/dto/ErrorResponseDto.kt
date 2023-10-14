@@ -7,14 +7,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ErrorResponseDto(
-
-    @SerialName("cod") val statusCode: Int,
-
-    @SerialName("message") val statusMessage: String
+    @SerialName("detail") val message: String
 )
 
 fun ErrorResponseDto.toDomain(): ErrorResponse {
     return ErrorResponse(
-        success = false, statusCode = this.statusCode, statusMessage = this.statusMessage
+        statusMessage = this.message
     )
 }

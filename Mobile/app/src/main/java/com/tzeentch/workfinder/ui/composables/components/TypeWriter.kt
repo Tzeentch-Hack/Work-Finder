@@ -46,7 +46,7 @@ fun TypewriterText(
     Text(
         text = textToDisplay,
         modifier = Modifier.textBrush(Brush.horizontalGradient(listOf(Color.Magenta, Color.Cyan))),
-        fontSize = 24.sp,
+        fontSize = 30.sp,
         fontWeight = FontWeight.Bold,
     )
 }

@@ -1,5 +1,6 @@
 package com.tzeentch.workfinder.ui.composables
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,63 +9,103 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.tzeentch.workfinder.NavigationItem
+import com.tzeentch.workfinder.ui.GreetingStates
 import com.tzeentch.workfinder.ui.composables.components.CustomOutlinedTextField
+import com.tzeentch.workfinder.ui.composables.components.loader.Loader
 import com.tzeentch.workfinder.viewModels.MainViewModel
 
 @Composable
-fun Authorization(navController: NavController,viewModel: MainViewModel) {
-    var name by remember {
-        mutableStateOf("")
-    }
-    var password by remember {
-        mutableStateOf("")
-    }
+fun Authorization(navController: NavController, viewModel: MainViewModel) {
 
-    val error by remember {
-        mutableStateOf("")
-    }
-    Column(
-        modifier = Modifier.padding(top = 45.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(40.dp)
-    ) {
+    when (val res = viewModel.greetingState.collectAsState().value) {
+        is GreetingStates.Initial -> {
+            Greeting(viewModel)
+        }
 
-        Text(text = "Введите свои регистрационные данные")
+        is GreetingStates.Registered -> {
+            navController.navigate(NavigationItem.MainScreen.route)
+        }
 
-        CustomOutlinedTextField(
-            defText = name,
-            defError = error,
-            hint = "работник месяца 213",
-            onValueChange = {
-                name = it
-            })
+        is GreetingStates.FillQuestionary -> {
+            navController.navigate(NavigationItem.FillQuest.route)
+        }
 
-        CustomOutlinedTextField(
-            defText = password,
-            defError = error,
-            hint = "*******",
-            onValueChange = {
-                password = it
-            })
+        is GreetingStates.Loading -> {
+            Loader()
+        }
 
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-            Button(onClick = {
-                navController.navigate(NavigationItem.Registration.route)
-            }) {
-                Text(text = "Войти")
+        is GreetingStates.Form -> {
+            var name by remember {
+                mutableStateOf("")
             }
 
-            Button(onClick = { }) {
-                Text(text = "Создать")
+            var password by remember {
+                mutableStateOf("")
+            }
+
+            var error by remember(res) {
+                mutableStateOf(res.error)
+            }
+
+            Column(
+                modifier = Modifier.padding(top = 45.dp, start = 15.dp, end = 15.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(40.dp)
+            ) {
+
+                Text(text = "Введите свои регистрационные данные")
+
+                CustomOutlinedTextField(defText = name,
+                    defTitle = "Имя",
+                    hint = "работник месяца 213",
+                    isError = error.isNotEmpty(),
+                    onValueChange = {
+                        error = ""
+                        name = it
+                    })
+
+                CustomOutlinedTextField(defText = password,
+                    defTitle = "Пароль",
+                    isError = error.isNotEmpty(),
+                    hint = "*******",
+                    onValueChange = {
+                        error = ""
+                        password = it
+                    })
+
+                AnimatedVisibility(error.isNotEmpty()) {
+                    Text(text = error, textAlign = TextAlign.Center, color = Color.Red)
+                }
+
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    Button(onClick = {
+                        viewModel.loginUser(name, password)
+                    }, enabled = name.isNotEmpty() && password.isNotEmpty() && error.isEmpty()) {
+                        Text(text = "Войти")
+                    }
+
+                    Button(onClick = {
+                        viewModel.registerUser(name, password)
+                    }, enabled = name.isNotEmpty() && password.isNotEmpty() && error.isEmpty()) {
+                        Text(text = "Создать")
+                    }
+                }
             }
         }
     }

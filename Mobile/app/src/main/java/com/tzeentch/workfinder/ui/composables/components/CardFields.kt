@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -31,10 +32,9 @@ fun CardFields(
             .padding(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = textField, modifier = Modifier.fillMaxWidth())
         CustomOutlinedTextField(
             defText = inputHolder.value,
-            defError = "",
+            defTitle = textField,
             hint = "",
             onValueChange = {
                 inputHolder.value = it
@@ -47,19 +47,21 @@ fun CardFields(
             Button(
                 onClick = { buttonHolder.value = buttonText1 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (buttonText1 == buttonHolder.value) Color.Blue else Color.Gray,
+                    containerColor = if (buttonText1 == buttonHolder.value) MaterialTheme.colorScheme.onTertiaryContainer else MaterialTheme.colorScheme.onSecondaryContainer,
                     contentColor = Color.White
-                ), modifier = Modifier.weight(1F)
+                ), modifier = Modifier
+                    .weight(1F)
+                    .height(45.dp)
             ) {
                 Text(text = buttonText1)
             }
             Button(
                 onClick = { buttonHolder.value = buttonText2 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (buttonText2 == buttonHolder.value) Color.Blue else Color.Gray,
+                    containerColor = if (buttonText2 == buttonHolder.value) MaterialTheme.colorScheme.onTertiaryContainer else MaterialTheme.colorScheme.onSecondaryContainer,
                     contentColor = Color.White
                 ),
-                modifier = Modifier.weight(1F)
+                modifier = Modifier.weight(1F).height(45.dp)
             ) {
                 Text(text = buttonText2)
             }

@@ -5,6 +5,7 @@ import com.tzeentch.workfinder.dto.ErrorResponseDto
 import com.tzeentch.workfinder.dto.toDomain
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
+import org.json.JSONObject
 
 suspend fun <T : Any?> safeApiCall(apiCall: suspend () -> T): NetworkResultState<T> {
     return try {
@@ -12,7 +13,12 @@ suspend fun <T : Any?> safeApiCall(apiCall: suspend () -> T): NetworkResultState
         val result = apiCall.invoke()
         NetworkResultState.Success(result)
     } catch (e: Exception) {
-        NetworkResultState.Failure(e)
+        val error = try {
+            JSONObject(e.message.toString()).getString("detail")
+        } catch (e: Exception) {
+            "UnExpected"
+        }
+        NetworkResultState.Failure(error)
     }
 }
 
@@ -25,8 +31,6 @@ internal suspend fun parseNetworkError(
     exception: Exception? = null
 ): Exception {
     throw errorResponse?.body<ErrorResponseDto>()?.toDomain() ?: ErrorResponse(
-        success = false,
-        statusCode = 0,
         statusMessage = exception?.message ?: "Error"
     )
 }

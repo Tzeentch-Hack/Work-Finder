@@ -10,6 +10,6 @@ import org.koin.dsl.module
 
 fun businessModule(): Module = module {
     single<PreferenceManager> { PreferenceManagerImpl(get()) }
-    single { MainRepository(get(), get()) }
+    single { MainRepository(get()) }
     viewModelOf(::MainViewModel)
 }
