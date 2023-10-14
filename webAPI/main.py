@@ -19,9 +19,8 @@ def root():
 
 
 @app.get("/coursera_courses", response_model=list[models.CourseraCourse], tags=["Courses"])
-#def get_coursera_courses(current_user: Annotated[models.User, Depends(authorization.get_current_active_user)],
-#                         search_params):
-def get_coursera_courses(search_params: str):
+def get_coursera_courses(current_user: Annotated[models.User, Depends(authorization.get_current_active_user)],
+                         search_params):
     try:
         results = coursera_parser.get_parsed_courses(search_params)
         return results
