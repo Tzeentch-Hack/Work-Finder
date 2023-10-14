@@ -33,7 +33,7 @@ def build_docx_resume(resume_info, image_path):
 
 
 if __name__ == "__main__":
-    resume_builder = ResumeBuilder("gpt-3.5-turbo", 2000)
+    resume_builder = ResumeBuilder("gpt-3.5-turbo", 2000, 'ru')
     user_info = {
         'age': 30,
         'gender': 'Male',

@@ -1,10 +1,33 @@
 from text_generator import TextGenerator
 import re
-
+from translator import trans
 class ResumeBuilder(TextGenerator):
-    def __init__(self, model_engine, max_tokens):
+    def __init__(self, model_engine, max_tokens, language='ru'):
         super().__init__(model_engine, max_tokens)
         self.system_prompt = "You perfectly personalize resume for any type of work"
+        self.language = language  # The source language
+
+    def _translate_to_english(self, text):
+        if self.language != 'en':
+            return trans.translate(text, source=self.language, destination='en')
+        return text
+
+    def _translate_from_english(self, text):
+        if self.language != 'en':
+            return trans.translate(text, source='en', destination=self.language)
+        return text
+
+    def _post_process(self, text, unwanted_headers):
+        for header in unwanted_headers:
+            # The regex ensures case-insensitive search and removes the entire line
+            pattern = re.compile(rf"^{header}\s*.*$", re.IGNORECASE | re.MULTILINE)
+            text = pattern.sub("", text).strip()
+        return text
+
+    def get_response(self, system_prompt, user_prompt):
+        user_prompt_translated = self._translate_to_english(user_prompt)
+        response = super().get_response(system_prompt, user_prompt_translated)
+        return self._translate_from_english(response)
 
     def _post_process(self, text, unwanted_headers):
         for header in unwanted_headers:

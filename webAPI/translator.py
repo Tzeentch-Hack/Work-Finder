@@ -35,12 +35,11 @@ class GoogleTranslator:
         return response['language']
 
 
+trans = GoogleTranslator()
 
 if __name__ == "__main__":
-    pass
-    uzb_text = "Мое резюме"
-    trans = GoogleTranslator()
-    translation = trans.translate(uzb_text, 'ru', 'en')
+    rus_text = "Привет"
+    translation = trans.translate(rus_text, 'ru', 'en')
     uzb_translation = trans.translate(translation, 'en', 'ru')
     print('uzb translation:', translation)
-    print('detection of the text:', trans.detect(uzb_text))
+    print('detection of the text:', trans.detect(rus_text))
