@@ -32,7 +32,8 @@ def get_user(username: str):
     user_from_sql = database.db.query(database.UserInDBSQL).filter(database.UserInDBSQL.username == username).first()
     if user_from_sql is None:
         return None
-    return models.UserInDB(username=user_from_sql.username, hashed_password=user_from_sql.hashed_password)
+    return models.UserInDB(username=user_from_sql.username, hashed_password=user_from_sql.hashed_password,
+                           has_questionary=user_from_sql.has_questionary)
 
 
 def username_exist(username: str):

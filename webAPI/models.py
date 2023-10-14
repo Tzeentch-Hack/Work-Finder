@@ -18,5 +18,13 @@ class User(BaseModel):
     has_questionary: bool | None = None
 
 
+class CourseraCourse(BaseModel):
+    title: str
+    preview_image_url : str
+    sub_title: str
+    href: str
+    content: str | None = None
+
+
 class UserInDB(User):
     hashed_password: str

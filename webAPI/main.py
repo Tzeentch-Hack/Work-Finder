@@ -6,6 +6,9 @@ import uvicorn
 import authorization
 import os
 
+import models
+import coursera_parser
+
 app = FastAPI()
 app.include_router(authorization.router)
 
@@ -13,6 +16,17 @@ app.include_router(authorization.router)
 @app.get("/", tags=["Main API"])
 def root():
     return {"message": "Work Finder"}
+
+
+@app.get("/coursera_courses", response_model=list[models.CourseraCourse], tags=["Courses"])
+#def get_coursera_courses(current_user: Annotated[models.User, Depends(authorization.get_current_active_user)],
+#                         search_params):
+def get_coursera_courses(search_params: str):
+    try:
+        results = coursera_parser.get_parsed_courses(search_params)
+        return results
+    except Exception as ex:
+        return {"message": str(ex)}
 
 
 @app.get("/download/{path:path}",  tags=["Download"])
