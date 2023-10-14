@@ -23,6 +23,7 @@ class UserInDBSQL(Base):
     full_name = Column(String)
     disabled = Column(BOOLEAN)
     hashed_password = Column(String)
+    has_questionary = Column(BOOLEAN)
 
 
 Base.metadata.create_all(bind=engine)
