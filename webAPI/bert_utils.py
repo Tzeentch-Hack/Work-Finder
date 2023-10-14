@@ -7,8 +7,10 @@ device = 'cpu'
 class SentenceTransformer(object):
 
     def __init__(self):
-        tokenizer = AutoTokenizer.from_pretrained("sentence-transformers/paraphrase-multilingual-mpnet-base-v2")
-        enc = AutoModel.from_pretrained("sentence-transformers/paraphrase-multilingual-mpnet-base-v2")
+        tokenizer = AutoTokenizer.from_pretrained("sberbank-ai/sbert_large_mt_nlu_ru")
+        enc = AutoModel.from_pretrained("sberbank-ai/sbert_large_mt_nlu_ru")
+        # tokenizer = AutoTokenizer.from_pretrained("sentence-transformers/paraphrase-multilingual-mpnet-base-v2")
+        # enc = AutoModel.from_pretrained("sentence-transformers/paraphrase-multilingual-mpnet-base-v2")
         self.model = {
             'tokenizer': tokenizer,
             'encoder': enc,
@@ -43,9 +45,9 @@ def get_sentence_similarity(model, requested_sentence, embedding_database):
     requested_embeddings = model(requested_sentence)
     return model.compute_similarity(requested_embeddings, embedding_database)
 
-current_model = SentenceTransformer()
 
 if __name__ == "__main__":
+    current_model = SentenceTransformer()
     some_embeddings = current_model(["I hate apples"])
     start = time.time()
     print('similarities', get_sentence_similarity(current_model, ["I love apples"], some_embeddings))
