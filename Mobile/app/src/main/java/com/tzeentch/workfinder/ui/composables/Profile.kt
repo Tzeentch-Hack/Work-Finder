@@ -132,10 +132,10 @@ fun ProfileScreen(navController: NavController, viewModel: MainViewModel) {
                 Button(
                     onClick = {
                         viewModel.quit()
-                        navController.navigate(NavigationItem.Greeting.route)
+                        navController.navigate(NavigationItem.Authorization.route)
                     }, modifier = Modifier
                         .height(55.dp)
-                        .weight(1f)
+                        .fillMaxWidth()
                 ) {
                     Text(text = "Выйти")
                 }

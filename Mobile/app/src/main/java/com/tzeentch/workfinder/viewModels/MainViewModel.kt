@@ -131,6 +131,7 @@ class MainViewModel constructor(
     fun quit() {
         viewModelScope.launch(coroutineExceptionHandler) {
             prefs.setAuthData("", "")
+            _mainState.value = MainScreenStates.Initial
             _greetingState.value = GreetingStates.Initial
         }
     }
@@ -165,7 +166,8 @@ class MainViewModel constructor(
                             it.isLoading {
                                 _mainState.value = MainScreenStates.Loading
                             }.onSuccess { vacancies ->
-                                _mainState.value = MainScreenStates.Content(vacancies, courses)
+                                _mainState.value =
+                                    MainScreenStates.Content(vacancies.vacanciesDto, courses)
                             }
                         }
                     }

@@ -56,12 +56,22 @@ fun MainScreen(navController: NavController, viewModel: MainViewModel) {
 
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.getCoursesAndVacancies(query = "")
-    }
+
 
     Column {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = { viewModel.getCoursesAndVacancies(query = "123") },
+                modifier = Modifier.height(45.dp)
+            ) {
+                Text(text = "Загрузить рекомендации")
+            }
             Button(
                 onClick = { navController.navigate(NavigationItem.Profile.route) },
                 modifier = Modifier.height(45.dp)
@@ -115,7 +125,11 @@ fun MainScreen(navController: NavController, viewModel: MainViewModel) {
                         }
                     }
                     if (showVacancies.value) {
-                        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                            contentPadding = PaddingValues(vertical = 15.dp)
+                        ) {
                             items(res.vacancies.size) { index ->
                                 Card(
                                     modifier = Modifier
@@ -136,7 +150,8 @@ fun MainScreen(navController: NavController, viewModel: MainViewModel) {
                                         Column(
                                             modifier = Modifier
                                                 .height(120.dp)
-                                                .padding(5.dp)
+                                                .padding(5.dp),
+                                            verticalArrangement = Arrangement.spacedBy(20.dp)
                                         ) {
                                             res.vacancies[index].spec?.let {
                                                 Text(
@@ -145,7 +160,13 @@ fun MainScreen(navController: NavController, viewModel: MainViewModel) {
                                                     textAlign = TextAlign.Start
                                                 )
                                             }
-                                            res.vacancies[index].title?.let { Text(text = it) }
+                                            res.vacancies[index].title?.let {
+                                                Text(
+                                                    text = it,
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    textAlign = TextAlign.Center
+                                                )
+                                            }
                                             res.vacancies[index].empl?.let {
                                                 Text(
                                                     text = it,

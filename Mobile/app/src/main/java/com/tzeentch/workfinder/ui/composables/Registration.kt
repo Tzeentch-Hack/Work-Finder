@@ -252,11 +252,11 @@ fun Registration(navController: NavController, viewModel: MainViewModel) {
 
                         5 -> {
                             CustomOutlinedTextField(
-                                defText = email.value,
+                                defText = pref.value,
                                 defTitle = "Предпочтения",
                                 hint = "",
                                 onValueChange = {
-                                    email.value = it
+                                    pref.value = it
                                 })
                         }
                     }

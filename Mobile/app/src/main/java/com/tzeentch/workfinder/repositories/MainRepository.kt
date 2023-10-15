@@ -8,6 +8,7 @@ import com.tzeentch.workfinder.dto.PhotoResponse
 import com.tzeentch.workfinder.dto.ProfileDto
 import com.tzeentch.workfinder.dto.UserDto
 import com.tzeentch.workfinder.dto.VacanciesDto
+import com.tzeentch.workfinder.dto.VacanciesResponce
 import com.tzeentch.workfinder.remote.NetworkResultState
 import com.tzeentch.workfinder.remote.safeApiCall
 import io.ktor.client.HttpClient
@@ -43,7 +44,7 @@ class MainRepository constructor(
 
     suspend fun getVacancies(
         token: String
-    ): Flow<NetworkResultState<List<VacanciesDto>>> {
+    ): Flow<NetworkResultState<VacanciesResponce>> {
         return flowOf(
             safeApiCall {
                 httpClient.get(urlString = Constants.GET_VACANCIES) {
