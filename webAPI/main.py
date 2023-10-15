@@ -70,11 +70,10 @@ def get_vacancies(current_user: Annotated[models.User, Depends(authorization.get
         result = user_recommendations.process_user_recommendations_vacancies(input_dict)
         response_list = []
         for dict_vac in result:
-            new_vacancy = models.Vacancy()
-            new_vacancy.name = dict_vac["name"]
-            new_vacancy.employment = dict_vac["employment"]
-            new_vacancy.specialization = dict_vac["specialization"]
-            new_vacancy.url = dict_vac["url"]
+            new_vacancy = models.Vacancy(name=dict_vac["name"],
+                                         employment=dict_vac["employment"],
+                                         specialization=dict_vac["specialization"],
+                                         url=dict_vac["url"])
             response_list.append(new_vacancy)
         response = models.Vacancies(vacancies=response_list)
         return response
