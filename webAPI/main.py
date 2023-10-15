@@ -42,6 +42,7 @@ def post_specialization_preferences(current_user: Annotated[models.User, Depends
         list_of_preferences.append(current_user.profile.labor_preference)
         result_list = user_recommendations.process_user_recommendations_fields(list_of_preferences)
         response = models.Specializations(specializations=result_list)
+        database.update_user_info(current_user)
         return response
     else:
         raise HTTPException(status_code=404, detail="Profile does not exist")
@@ -50,6 +51,10 @@ def post_specialization_preferences(current_user: Annotated[models.User, Depends
 @app.get("/vacancies", response_model=models.Vacancies, tags=["Main API"])
 def get_vacancies(current_user: Annotated[models.User, Depends(authorization.get_current_active_user)]):
     if current_user.has_questionary:
+        list_of_preferences = current_user.profile.preferences.split(',')
+        list_of_preferences.append(current_user.profile.labor_preference)
+        current_user.profile.preferred_specialization = list_of_preferences[0]
+        database.update_user_info(current_user)
         input_dict = {"age": current_user.profile.age,
                       "gender": current_user.profile.gender,
                       "education": current_user.profile.education,
