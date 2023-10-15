@@ -8,9 +8,11 @@ import image_manager
 import os
 
 import models
+import database
 import coursera_parser
 import resume_document_compiler
 from resume_generator import ResumeBuilder
+
 
 app = FastAPI()
 app.include_router(authorization.router)
@@ -31,8 +33,11 @@ def get_coursera_courses(current_user: Annotated[models.User, Depends(authorizat
         return {"message": str(ex)}
 
 
+@app.post("/specializations", )
+
+
 @app.post("/generate_cv", response_model=models.UrlData, tags=["CV"])
-def generate_cv(current_user: Annotated[models.User, Depends(authorization.get_current_active_user)],
+async def generate_cv(current_user: Annotated[models.User, Depends(authorization.get_current_active_user)],
                 pdf: bool,
                 request: Request,
                 file: UploadFile = File(...)):
@@ -67,6 +72,15 @@ def generate_cv(current_user: Annotated[models.User, Depends(authorization.get_c
         result = os.path.join(os.path.join(f'{request.base_url}download/{file_path}'))
         response = models.UrlData(url=result)
     return response
+
+
+@app.post("/update_user_info", tags=["User management"])
+async def add_profile(current_user: Annotated[models.User, Depends(authorization.get_current_active_user)],
+                      profile: models.UserProfile):
+    current_user.profile = profile
+    current_user.has_questionary = True
+    database.update_user_info(current_user)
+    return {"User profile has been uploaded"}
 
 
 @app.get("/download/{path:path}",  tags=["Download"])
