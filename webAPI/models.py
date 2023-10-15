@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+import models
+
 
 class Token(BaseModel):
     access_token: str
@@ -21,6 +23,7 @@ class UserProfile(BaseModel):
     work_mode: str | None = None
     remote_or_local: str | None = None
     preferred_specialization: str | None = None
+    preferences: str | None = None
 
 
 class User(BaseModel):
@@ -33,7 +36,18 @@ class User(BaseModel):
 
 
 class Specializations(BaseModel):
+    specializations: list[str]
 
+
+class Vacancy(BaseModel):
+    name: str
+    specialization: str
+    employment: str
+    url: str
+
+
+class Vacancies(BaseModel):
+    vacancies: list[Vacancy]
 
 
 class UserInDB(User):
