@@ -157,15 +157,15 @@ class MainViewModel constructor(
 
     fun getCoursesAndVacancies(query: String) {
         viewModelScope.launch(coroutineExceptionHandler) {
-            repository.getCourses(token, query).collect { result ->
+            repository.getVacancies(token).collect { result ->
                 result.isLoading {
                     _mainState.value = MainScreenStates.Loading
-                }.onSuccess { courses ->
+                }.onSuccess { vacancies ->
                     viewModelScope.launch(coroutineExceptionHandler) {
-                        repository.getVacancies(token).collect {
+                        repository.getCourses(token, query).collect {
                             it.isLoading {
                                 _mainState.value = MainScreenStates.Loading
-                            }.onSuccess { vacancies ->
+                            }.onSuccess { courses ->
                                 _mainState.value =
                                     MainScreenStates.Content(vacancies.vacanciesDto, courses)
                             }
