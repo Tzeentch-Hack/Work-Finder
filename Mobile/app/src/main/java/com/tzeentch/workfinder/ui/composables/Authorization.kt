@@ -121,5 +121,7 @@ fun Authorization(navController: NavController, viewModel: MainViewModel) {
                 }
             }
         }
+
+        else -> {}
     }
 }

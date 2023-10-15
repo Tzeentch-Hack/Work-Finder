@@ -3,6 +3,8 @@ package com.tzeentch.workfinder.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.tzeentch.workfinder.dto.ProfileDto
 import com.tzeentch.workfinder.dto.UserDto
 import com.tzeentch.workfinder.local.PreferenceManager
 import com.tzeentch.workfinder.remote.isLoading
@@ -16,6 +18,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel constructor(
@@ -125,6 +128,28 @@ class MainViewModel constructor(
         }
     }
 
+    fun quit() {
+        viewModelScope.launch(coroutineExceptionHandler) {
+            prefs.setAuthData("", "")
+            _greetingState.value = GreetingStates.Initial
+        }
+    }
+
+    fun sendProfileData(profileDto: ProfileDto) {
+        viewModelScope.launch(coroutineExceptionHandler) {
+            repository.sendProfileData(profileDto, token).collect {
+                it.isLoading {
+                    _greetingState.value = GreetingStates.Loading
+                }.onSuccess {
+                    _greetingState.value = GreetingStates.GoToMainScreen
+                }.onFailure {
+
+                }
+            }
+        }
+
+    }
+
     fun setState(states: GreetingStates) {
         _greetingState.value = states
     }
@@ -134,8 +159,16 @@ class MainViewModel constructor(
             repository.getCourses(token, query).collect { result ->
                 result.isLoading {
                     _mainState.value = MainScreenStates.Loading
-                }.onSuccess {
-                    _mainState.value = MainScreenStates.Content(emptyList(), it)
+                }.onSuccess { courses ->
+                    viewModelScope.launch(coroutineExceptionHandler) {
+                        repository.getVacancies(token).collect {
+                            it.isLoading {
+                                _mainState.value = MainScreenStates.Loading
+                            }.onSuccess { vacancies ->
+                                _mainState.value = MainScreenStates.Content(vacancies, courses)
+                            }
+                        }
+                    }
                 }.onFailure {
 
                 }
@@ -144,6 +177,7 @@ class MainViewModel constructor(
     }
 
     fun uploadPhoto(photo: ByteArray) {
+        _profileState.value = ProfileScreenStates.Loading
         viewModelScope.launch(coroutineExceptionHandler) {
             repository.uploadPhoto(token, photo).collect { result ->
                 result.isLoading {
@@ -151,7 +185,7 @@ class MainViewModel constructor(
                 }.onSuccess {
                     _profileState.value = ProfileScreenStates.UserProfile(user, it.url)
                 }.onFailure {
-                    Log.d("smt", it)
+                    _profileState.value = ProfileScreenStates.UserProfile(user, "")
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.tzeentch.workfinder.ui
 
 import com.tzeentch.workfinder.dto.CoursesDto
 import com.tzeentch.workfinder.dto.UserDto
+import com.tzeentch.workfinder.dto.VacanciesDto
 
 sealed class GreetingStates {
 
@@ -14,6 +15,8 @@ sealed class GreetingStates {
     object Registered : GreetingStates()
 
     object FillQuestionary : GreetingStates()
+
+    object GoToMainScreen : GreetingStates()
 }
 
 
@@ -25,7 +28,8 @@ sealed class MainScreenStates {
 
     object Error : MainScreenStates()
 
-    class Content(val vacancies: List<Int>, val courses: List<CoursesDto>) : MainScreenStates()
+    class Content(val vacancies: List<VacanciesDto>, val courses: List<CoursesDto>) :
+        MainScreenStates()
 }
 
 

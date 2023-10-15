@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.tzeentch.workfinder.Constants
 
 @Composable
 fun PagerController(
@@ -36,7 +37,7 @@ fun PagerController(
                 Text(text = "<- Назад")
             }
         }
-        if (currPage != 3) {
+        if (currPage != Constants.FINISH_PAGE) {
             Button(
                 onClick = {
                     onNextClick()

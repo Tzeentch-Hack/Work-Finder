@@ -23,6 +23,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,9 +49,6 @@ import com.tzeentch.workfinder.viewModels.MainViewModel
 @Composable
 fun MainScreen(navController: NavController, viewModel: MainViewModel) {
 
-    val inputHolder = remember {
-        mutableStateOf("")
-    }
 
     val showVacancies = remember {
         mutableStateOf(true)
@@ -58,13 +56,17 @@ fun MainScreen(navController: NavController, viewModel: MainViewModel) {
 
     val context = LocalContext.current
 
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getCoursesAndVacancies(query = "")
+    }
+
     Column {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             Button(
                 onClick = { navController.navigate(NavigationItem.Profile.route) },
-                modifier = Modifier.height(55.dp)
+                modifier = Modifier.height(45.dp)
             ) {
-                Text(text = "Профиль", fontSize = 23.sp)
+                Text(text = "Профиль ->", fontSize = 18.sp)
             }
         }
 
@@ -73,39 +75,6 @@ fun MainScreen(navController: NavController, viewModel: MainViewModel) {
                 .fillMaxSize()
                 .padding(20.dp)
         ) {
-
-            Text(
-                text = "Предпочтения",
-                fontSize = 20.sp,
-                color = Color(0xFF284779),
-                modifier = Modifier.padding(start = 15.dp)
-            )
-            CustomOutlinedTextField(
-                defText = inputHolder.value,
-                defTitle = "",
-                hint = "",
-                onValueChange = {
-                    inputHolder.value = it
-                })
-            OutlinedButton(
-                onClick = { viewModel.getCoursesAndVacancies(query = inputHolder.value) },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xff284779),
-                    contentColor = Color.White
-                ),
-                border = BorderStroke(color = Color(0x4DFDFDFD), width = 1.dp),
-                shape = RoundedCornerShape(
-                    topStart = 0.dp,
-                    topEnd = 0.dp,
-                    bottomStart = 22.dp,
-                    bottomEnd = 22.dp
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(55.dp)
-            ) {
-                Text(text = "Поиск")
-            }
             when (val res = viewModel.mainState.collectAsState().value) {
                 is MainScreenStates.Content -> {
                     Row(modifier = Modifier.fillMaxWidth()) {
@@ -148,8 +117,45 @@ fun MainScreen(navController: NavController, viewModel: MainViewModel) {
                     if (showVacancies.value) {
                         LazyColumn(modifier = Modifier.fillMaxWidth()) {
                             items(res.vacancies.size) { index ->
-                                Card {
-                                    Text(text = "")
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    onClick = {
+                                        val url = res.vacancies[index].url
+                                        val i = Intent(Intent.ACTION_VIEW)
+                                        i.data = Uri.parse(url)
+                                        startActivity(context, i, null)
+                                    },
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = Color(
+                                            0xFF47669B
+                                        )
+                                    )
+                                ) {
+                                    Row(modifier = Modifier.fillMaxWidth()) {
+                                        Column(
+                                            modifier = Modifier
+                                                .height(120.dp)
+                                                .padding(5.dp)
+                                        ) {
+                                            res.vacancies[index].spec?.let {
+                                                Text(
+                                                    text = it,
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    textAlign = TextAlign.Start
+                                                )
+                                            }
+                                            res.vacancies[index].title?.let { Text(text = it) }
+                                            res.vacancies[index].empl?.let {
+                                                Text(
+                                                    text = it,
+                                                    modifier = Modifier
+                                                        .fillMaxWidth(),
+                                                    textAlign = TextAlign.End,
+                                                )
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

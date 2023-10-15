@@ -1,10 +1,13 @@
 package com.tzeentch.workfinder.repositories
 
+import android.provider.ContactsContract.CommonDataKinds.Email
 import com.tzeentch.workfinder.Constants
 import com.tzeentch.workfinder.dto.AuthResultDto
 import com.tzeentch.workfinder.dto.CoursesDto
 import com.tzeentch.workfinder.dto.PhotoResponse
+import com.tzeentch.workfinder.dto.ProfileDto
 import com.tzeentch.workfinder.dto.UserDto
+import com.tzeentch.workfinder.dto.VacanciesDto
 import com.tzeentch.workfinder.remote.NetworkResultState
 import com.tzeentch.workfinder.remote.safeApiCall
 import io.ktor.client.HttpClient
@@ -40,11 +43,27 @@ class MainRepository constructor(
 
     suspend fun getVacancies(
         token: String
-    ): Flow<NetworkResultState<UserDto>> {
+    ): Flow<NetworkResultState<List<VacanciesDto>>> {
         return flowOf(
             safeApiCall {
                 httpClient.get(urlString = Constants.GET_VACANCIES) {
                     header("Authorization", "Bearer $token")
+                }.body()
+            }
+        )
+    }
+
+    suspend fun sendProfileData(
+        profileDto: ProfileDto,
+        token: String
+    ): Flow<NetworkResultState<Any>> {
+        return flowOf(
+            safeApiCall {
+                httpClient.post(urlString = Constants.SEND_PROFILE) {
+                    header("Authorization", "Bearer $token")
+                    setBody(
+                        profileDto
+                    )
                 }.body()
             }
         )

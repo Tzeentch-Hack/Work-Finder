@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserDto(
     @SerialName("username") val userName: String,
-    @SerialName("has_questionary") val hasQuestionary: Boolean
+    @SerialName("has_questionary") val hasQuestionary: Boolean,
+    @SerialName("profile") val profileDto: ProfileDto?
 )
