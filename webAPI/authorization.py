@@ -7,6 +7,7 @@ from fastapi import APIRouter
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
+import json
 
 import models
 import database
@@ -32,8 +33,17 @@ def get_user(username: str):
     user_from_sql = database.db.query(database.UserInDBSQL).filter(database.UserInDBSQL.username == username).first()
     if user_from_sql is None:
         return None
-    return models.UserInDB(username=user_from_sql.username, hashed_password=user_from_sql.hashed_password,
-                           has_questionary=user_from_sql.has_questionary)
+    user_model = models.UserInDB(username=user_from_sql.username,
+                                 full_name=user_from_sql.full_name,
+                                 avatar_url=user_from_sql.avatar_url,
+                                 disabled=user_from_sql.disabled,
+                                 hashed_password=user_from_sql.hashed_password,
+                                 has_questionary=user_from_sql.has_questionary,
+                                 profile=None)
+    if user_from_sql.profile_data is not None:
+        user_model.profile = models.UserProfile()
+        user_model.profile = user_model.profile.model_validate_json(user_from_sql.profile_data)
+    return user_model
 
 
 def username_exist(username: str):
@@ -130,7 +140,8 @@ def register_new_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
     if username_exist(new_username):
         raise HTTPException(status_code=409, detail="User already exist")
     new_password_hash = get_password_hash(form_data.password)
-    new_user = database.UserInDBSQL(username=new_username, hashed_password=new_password_hash,
+    new_user = database.UserInDBSQL(username=new_username,
+                                    hashed_password=new_password_hash,
                                     has_questionary=False)
     database.db.add(new_user)
     database.db.commit()

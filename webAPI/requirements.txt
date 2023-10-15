@@ -54,3 +54,4 @@ beautifulsoup4
 python-docx
 openai
 google-cloud-translate
+transformers
